@@ -11,3 +11,7 @@ require('./plugins/db')(app);
 app.listen(3000, () => {
     console.log('App run localhost:3000')
 })
+
+process.on('unhandledRejection', (reason, p) => {
+    console.log('Unhandled Rejection at:', p, 'reason:', reason);
+});
