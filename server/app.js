@@ -3,7 +3,7 @@ const app = express()
 
 app.use(require('cors')())
 app.use(express.json())
-
+app.use('/uploads', express.static(__dirname + '/uploads'))
 
 require('./router/admin')(app);
 require('./plugins/db')(app);

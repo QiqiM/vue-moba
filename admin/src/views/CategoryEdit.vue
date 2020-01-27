@@ -18,6 +18,7 @@
   </div>
 </template>
 <script>
+/* eslint-disable */
 export default {
   props: {
     id: {}
@@ -30,7 +31,7 @@ export default {
   },
   methods: {
     async save() {
-      let res;
+      let res;  
       if (this.id) {
         res = await this.$http.put(`rest/categories/${this.id}`, this.model);
       } else {
@@ -47,7 +48,8 @@ export default {
       this.model = res.data;
     },
     async fetchparent() {
-      const res = await this.$http.get("rest/categories");
+      // eslint-disable-next-line
+      const res = await this.$http.get("rest/categories");   
       this.parent = res.data;
       console.log(this.parent)
     }

@@ -39,4 +39,13 @@ module.exports = app => {
         req.Model = require(`../../models/${modelName}`)
         next()
     }, router);
+
+    // 上传图片
+    const upload = require('../../plugins/upload')
+
+    app.use('/admin/api/upload', upload.single('file'), async(req, res) => {
+        const file = req.file
+        file.url = `http://localhost:3000/uploads/${file.filename}`
+        res.send(file)
+    })
 }
