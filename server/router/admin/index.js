@@ -1,79 +1,104 @@
-module.exports = app => {
-    const express = require('express')
+module.exports = (app) => {
+    const express = require("express");
+    const jwt = require("jsonwebtoken");
+    const AdminUser = require("../../models/AdminUser");
+    const assert = require('http-assert')
+
     const router = express.Router({
-        mergeParams: true
-    })
+        mergeParams: true,
+    });
 
-    router.post('/', async(req, res) => {
-        const data = await req.Model.create(req.body)
+    // 创建资源
+    router.post("/", async(req, res) => {
+        const data = await req.Model.create(req.body);
         res.send(data);
-    })
+    });
 
-    router.put('/:id', async(req, res) => {
-        const data = await req.Model.findByIdAndUpdate(req.params.id, req.body)
+    // 更新资源
+    router.put("/:id", async(req, res) => {
+        const data = await req.Model.findByIdAndUpdate(req.params.id, req.body);
         res.send(data);
-    })
+    });
 
-    router.delete('/:id', async(req, res) => {
-        await req.Model.findByIdAndDelete(req.params.id, req.body)
+    // 删除资源
+    router.delete("/:id", async(req, res) => {
+        await req.Model.findByIdAndDelete(req.params.id, req.body);
         res.send({ success: true });
-    })
+    });
 
-    router.get('/', async(req, res) => {
-        const queryOptions = {}
-        if (req.Model.modelName === 'Category') {
-            queryOptions.populate = 'parent'
+    // 资源列表
+    router.get("/", async(req, res) => {
+        const queryOptions = {};
+        if (req.Model.modelName === "Category") {
+            queryOptions.populate = "parent";
         }
 
-        const data = await req.Model.find().setOptions(queryOptions).limit(10)
+        const data = await req.Model.find().setOptions(queryOptions).limit(10);
         res.send(data);
-    })
+    });
 
-    router.get('/:id', async(req, res) => {
-        const data = await req.Model.findById(req.params.id)
+    // 资源详情
+    router.get("/:id", async(req, res) => {
+        const data = await req.Model.findById(req.params.id);
         res.send(data);
-    })
+    });
 
-    app.use('/admin/api/rest/:resource', async(req, res, next) => {
-        const modelName = require('inflection').classify(req.params.resource)
-        req.Model = require(`../../models/${modelName}`)
-        next()
-    }, router);
+    // 登录校验中间件
+    const authMiddleware = require('../../middleware/auth')
+
+    const resourceMiddleware = require('../../middleware/resource')
+
+    app.use("/admin/api/rest/:resource",
+        authMiddleware(),
+        resourceMiddleware(),
+        router
+    );
 
     // 上传图片
-    const upload = require('../../plugins/upload')
+    const upload = require("../../plugins/upload");
 
-    app.use('/admin/api/upload', upload.single('file'), async(req, res) => {
-        const file = req.file
-        file.url = `http://localhost:3000/uploads/${file.filename}`
-        res.send(file)
-    })
+    app.use("/admin/api/upload", authMiddleware(), upload.single("file"), async(req, res) => {
+        const file = req.file;
+        file.url = `http://localhost:3000/uploads/${file.filename}`;
+        res.send(file);
+    });
 
-    app.post('/admin/api/login', async(req, res) => {
-        const { username, password } = req.body
+    app.post("/admin/api/login", async(req, res) => {
+        const { username, password } = req.body;
 
         // 根据用户名，查找用户
-        const AdminUser = require('../../models/AdminUser')
-        const user = await AdminUser.findOne({ username }).select('+password')
+        const user = await AdminUser.findOne({ username }).select("+password");
 
-        if (!user) {
-            return res.status(422).send({
-                message: '用户不存在'
-            })
-        }
+        assert(user, 422, '用户不存在')
 
+        // if (!user) {
+        //     return res.status(422).send({
+        //         message: "用户不存在",
+        //     });
+        // }
 
         // 判断是否为合法用户
-        const isValid = require('bcrypt').compareSync(password, user.password)
-        if (!isValid) {
-            return res.status(422).send({
-                message: '密码错误'
-            })
-        }
+        const isValid = require("bcrypt").compareSync(password, user.password);
 
-        const jwt = require('jsonwebtoken')
-        const token = jwt.sign({ id: user._id }, app.get('secret'))
+        // express 5.0版本一下,assert会被process的unhandledRejection直接捕获，走不到express的错误处理函数
+        // 若需要使用http-assert,需要 npm i express@next 安装^5.0.0-alpha.8 express5的测试版本
+        assert(isValid, 422, '密码错误')
 
-        res.send({ token })
+        // if (!isValid) {
+        //     return res.status(422).send({
+        //         message: "密码错误",
+        //     });
+        // }
+
+        const token = jwt.sign({ id: user._id }, app.get("secret"));
+
+        res.send({ token });
+    });
+
+    // 错误处理函数
+    app.use(async(err, req, res, next) => {
+        res.status(err.statusCode || 500).send({
+            message: err.message
+        })
     })
-}
+};

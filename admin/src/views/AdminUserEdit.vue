@@ -45,7 +45,7 @@ export default {
     }
   },
   created() {
-    this.fecth();
+    this.id && this.fecth();
   }
 };
 </script>
