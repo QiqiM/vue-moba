@@ -1,0 +1,72 @@
+// colors
+// $符号定义变量， 普通list（a,b,c）, map (a: 1,b:2, c:3)
+$colors: (
+  "primary": #db9e3f,
+  "white": #fff,
+  "info": #4b67af,
+  "light": #f9f9f9,
+  "light-1": #d4d9de,
+  "gray": #999,
+  "gray-1": #666,
+  "dark-1": #343440,
+  "dark": #222,
+  "black": #000,
+);
+
+$border-color: map-get($colors, 'light-1');
+
+$font-size: (
+  xxs: 0.6154,
+  xs: 0.7692,
+  // 10px
+    sm: 0.9231,
+  // 12px
+    md: 1,
+  // 13px  基准字体大小
+    lg: 1.0769,
+  // 14px
+    xl: 1.2308 // 16px,,,,,,
+);
+
+// 主轴（x轴）对齐方式
+$flex-jc: (
+  start: flex-start,
+  end: flex-end,
+  center: center,
+  between: sapce-between,
+  around: space-around,
+);
+
+// 交叉轴（y轴）对齐方式  ,align-items
+$flex-ai: (
+  start: flex-start,
+  end: flex-end,
+  center: center,
+  stretch: stretch,
+);
+
+$spacing-types: (
+  m: margin,
+  p: padding,
+);
+
+$spacing-directions: (
+  t: top,
+  r: right,
+  b: bottom,
+  l: left,
+);
+
+$spacing-base-size: 1rem;
+$spacing-sizes: (
+  0: 0,
+  1: 0.25,
+  2: 0.5,
+  3: 1,
+  4: 1.5,
+  5: 3,
+);
+
+
+// font-size ，px->rem换算插件px to rem,安装完成后,需修改Number of pixels per 1rem:13px,修改成项目需要的大小
+$base-font-size: 1rem;

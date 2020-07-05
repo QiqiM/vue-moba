@@ -1,0 +1,182 @@
+@import './variables';
+
+// reset
+* {
+  box-sizing: border-box; // 修改默认盒模型（以边框为准，不会把自己撑大，而是会把自己挤压）
+  outline: none; // 去掉默认高亮样式
+}
+
+html {
+  font-size: 13px; // 基础字体大小
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.2rem; // 设置为当前字体大小的1.2倍
+  background: #f1f1f1;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: #999;
+}
+
+// 循环生成文字颜色和背景颜色
+@each $key, $val in $colors {
+  .text-#{$key} {
+    color: $val;
+  }
+  .bg-#{$key} {
+    background-color: $val;
+  }
+}
+
+// text
+@each $var in (left, center, right) {
+  // #{} ,在连字符里取值
+  .text-#{$var} {
+    text-align: $var !important;
+  }
+}
+
+
+@each $sizeKey, $size in $font-size {
+  .fs-#{$sizeKey} {
+    font-size: $size * $base-font-size;
+  }
+}
+
+// flex布局
+.d-flex {
+  display: flex;
+}
+
+// 垂直方向
+.flex-cloumn {
+  flex-direction: column;
+}
+
+.flex-warp {
+  flex-wrap: wrap;
+}
+
+
+@each $key, $val in $flex-jc {
+  .jc-#{$key} {
+    justify-content: $val;
+  }
+}
+
+
+
+@each $key, $val in $flex-ai {
+  .ai-#{$key} {
+    align-items: $val;
+  }
+}
+
+// 左边固定，右边自动拉伸撑满，简单写法
+.flex-1 {
+  flex: 1;
+}
+
+// 完整写法，默认将自己拉伸，占满剩余像素
+.flex-grow-1 {
+  flex-grow: 1;
+}
+
+// margin padding
+// spacing
+// .mt-1 => margin-top level 1 .pb-2 => padding-buttom level 2
+// .mt-2 => margin-top level 2
+// .mt-3 => margin-top level 3
+
+
+
+@each $typeKey, $type in $spacing-types {
+  // .m-1  {margin: 0rem}
+  @each $sizeKey, $size in $spacing-sizes {
+    .#{$typeKey}-#{$sizeKey} {
+      #{$type}: $size * $spacing-base-size;
+    }
+  }
+
+  // .my-1  {margin-top: 0rem, margin-bottom: 0rem}
+  @each $sizeKey, $size in $spacing-sizes {
+    // .mx-1  {margin-left: 0rem, margin-right: 0rem}
+    .#{$typeKey}x-#{$sizeKey} {
+      #{$type}-left: $size * $spacing-base-size;
+      #{$type}-right: $size * $spacing-base-size;
+    }
+
+    .#{$typeKey}y-#{$sizeKey} {
+      #{$type}-top: $size * $spacing-base-size;
+      #{$type}-bottom: $size * $spacing-base-size;
+    }
+  }
+
+  // .mt-1  {margin-top: 0.25rem}
+  @each $directionKey, $direction in $spacing-directions {
+    @each $sizeKey, $size in $spacing-sizes {
+      .#{$typeKey}#{$directionKey}-#{$sizeKey} {
+        #{$type}-#{$direction}: $size * $spacing-base-size;
+      }
+    }
+  }
+}
+
+// button
+.btn {
+  border: none;
+  border-radius: 0.1538;
+  font-size: map-get($font-size, "sm") & $base-font-size;
+  padding: 0.2rem 0.6rem;
+}
+
+a{
+  color: #999
+}
+
+//nav
+.nav {
+  .nav-item{
+    border-bottom: 3px solid transparent;  // transparent透明，每个导航都加一个3px的边框，否则会对不齐
+    padding-bottom: 0.2rem;
+    &.active{
+      border-bottom: 3px solid #fff;
+    }
+  }
+
+
+}
+
+// width
+
+.w-100{
+  width: 100%;
+}
+
+.h-100{
+  height: 100%;
+}
+
+
+// sprite  http://www.spritecow.com/ 切图
+.sprite{
+  background: url(../images/index.png) no-repeat 0 0; // 0 0表示左上角对齐
+  background-size: 28.8462rem;  // 375px
+  display: inline-block;    // 才可以设置宽高
+
+  &.sprite-news {
+    width: 1.7692rem;
+    height: 1.5385rem;
+    background-position: 63.546% 15.517%;
+  }
+
+  &.sprite-arrow {
+    width: 0.7692rem;
+    height: 0.7692rem;
+    background-position: 38.577% 52.076%;
+  }
+}
