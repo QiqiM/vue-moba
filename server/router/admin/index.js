@@ -33,7 +33,7 @@ module.exports = (app) => {
             queryOptions.populate = "parent";
         }
 
-        const data = await req.Model.find().setOptions(queryOptions).limit(10);
+        const data = await req.Model.find().setOptions(queryOptions).limit(100);
         res.send(data);
     });
 

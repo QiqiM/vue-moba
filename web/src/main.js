@@ -10,6 +10,7 @@ Vue.use(VueAwesomeSwiper, /* { default options with global component } */)
 
 Vue.config.productionTip = false
 
+import './assets/iconfont/iconfont.css'
 import './assets/scss/style.scss'
 
 new Vue({

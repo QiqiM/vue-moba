@@ -9,7 +9,7 @@
       <button type="button" href="" class="bg-primary btn">立即下载</button>
     </div>
     <div class="bg-primary pt-3 pb-2">
-      <div class="nav d-flex text-white jc-around">
+      <div class="nav nav-inverse pb-1 jc-around">
         <div class="nav-item active"> 
           <router-link class="nav-link" tag="div" to="">首页</router-link>
         </div>
@@ -34,4 +34,11 @@ export default {
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+// 吸顶效果
+.topBar{
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+</style>
